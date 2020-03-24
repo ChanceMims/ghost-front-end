@@ -1,33 +1,46 @@
 import React, { Component } from "react";
-import { Map, GoogleApiWrapper } from "google-maps-react";
+import { Map, GoogleApiWrapper, Marker, InfoWindow } from "google-maps-react";
 
 const mapStyles = {
-  width: "100%",
+  width: "80vw",
   height: "100%"
 };
 
 export class MyMap extends Component {
+  //eventNames = ['click', 'mouseover']
 
-  success = position => {
-    console.log(position)
-  }
+  handleMouseover = encounter => {
+    console.log(encounter);
+    this.setState({
+      selectedEncounter: encounter
+    });
+  };
 
   render() {
     return (
       <Map
         google={this.props.google}
         zoom={16}
+        onClick={this.props.handleClick}
         style={mapStyles}
-        initialCenter={{
-          lat: 30.277397500000003,
-          lng: -97.7429255
-        }}
-        onClick={() => navigator.geolocation.getCurrentPosition(this.success)}
-      />
+        initialCenter={this.props.coords}
+      >
+        {this.props.encounters.map(encounter => (
+          <Marker
+            onClick={() => this.props.handleSelectEncounter(encounter)}
+            key={encounter.id}
+            name={encounter.title}
+            onMouseover={() => {}}
+            position={{ lat: encounter.lat, lng: encounter.lng }}
+          >
+            )}
+          </Marker>
+        ))}
+      </Map>
     );
   }
 }
 
 export default GoogleApiWrapper({
-  apiKey: "AIzaSyC1mB3g8qG-9BOAr_2INW0XX_pB5pKUy4Y"
+  apiKey: process.env.REACT_APP_API_KEY
 })(MyMap);

@@ -1,6 +1,14 @@
 import React, { useState } from "react";
-import { Button, Form, Grid, Header, Image, Segment } from "semantic-ui-react";
-
+import {
+  Button,
+  Form,
+  Grid,
+  Header,
+  Image,
+  Segment,
+  Message
+} from "semantic-ui-react";
+import { Link } from "react-router-dom";
 
 const LoginForm = props => {
   const [username, setUsername] = useState("");
@@ -12,7 +20,10 @@ const LoginForm = props => {
         <Header as="h2" color="teal" textAlign="center">
           <Image src="/logo.png" /> Log-in to your account
         </Header>
-        <Form onSubmit={() => props.handleSubmit({username, password}, 'login')} size="large">
+        <Form
+          onSubmit={() => props.handleSubmit({ username, password }, "login")}
+          size="large"
+        >
           <Segment stacked>
             <Form.Input
               fluid
@@ -35,6 +46,9 @@ const LoginForm = props => {
             </Button>
           </Segment>
         </Form>
+        <Message>
+          <Link to="/create-user">New to us?</Link>
+        </Message>
       </Grid.Column>
     </Grid>
   );
