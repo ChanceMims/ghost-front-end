@@ -8,6 +8,7 @@ const success = position => {
 const CreatePost = props => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [image, setImage] = useState("");
 
   return (
     <Grid textAlign="center" style={{ height: "50vh" }} verticalAlign="middle">
@@ -17,7 +18,7 @@ const CreatePost = props => {
         </Header>
         <Form
           size="large"
-          onSubmit={() => props.handlePost({ title, content })}
+          onSubmit={() => props.handlePost({ title, content, image })}
         >
           <Segment stacked>
             <Form.Input
@@ -28,7 +29,12 @@ const CreatePost = props => {
               onChange={e => setContent(e.target.value)}
               placeholder="description"
             />
-
+            <label>Upload your avatar:</label>
+            <Form.Input
+              type="file"
+              name="image"
+              onChange={e => setImage(e.target.files[0])}
+            />
             <Button
               color="teal"
               size="large"

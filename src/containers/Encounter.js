@@ -5,22 +5,24 @@ import { Grid } from "semantic-ui-react";
 
 const Encounter = props => {
   const [comments, setComments] = useState([]);
+  const [image, setImage] = useState("");
 
   useEffect(() => {
     // console.log(props.encounter);
     fetch(`http://localhost:3000/posts/${props.encounter.id}`)
       .then(resp => resp.json())
       .then(json => {
+        setImage(json.image);
         setComments(json.comments);
         //console.log(json.comments);
       });
-  }, [props.encounter, comments]);
+  }, [props.encounter]);
 
   return (
     <Grid>
       <Grid.Row>
         <Grid.Column>
-          <EncounterDetail encounter={props.encounter} />
+          <EncounterDetail encounter={props.encounter} image={image} />
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>

@@ -11,6 +11,7 @@ import NavBar from "./components/NavBar";
 import CreateUser from "./components/CreateUser";
 import LoginForm from "./components/LoginForm";
 import Profile from "./components/Profile";
+import { DirectUpload } from "activestorage";
 require("dotenv").config();
 
 const BASEURL = "http://localhost:3000";
@@ -86,6 +87,7 @@ class App extends Component {
         lng: lng,
         user_id: this.state.currentUser.id
       });
+      // debugger;
       fetch(`${BASEURL}/posts`, {
         method: "POST",
         headers: {
@@ -96,11 +98,13 @@ class App extends Component {
         body: JSON.stringify(encounterData)
       })
         .then(resp => resp.json())
-        .then(json =>
+        .then(json => {
           this.setState({
             encounters: [...this.state.encounters, json]
-          })
-        );
+          });
+          console.log(json);
+          this.uploadFile(data.image, json);
+        });
     });
   };
 
@@ -150,6 +154,7 @@ class App extends Component {
       encounters: [...this.state.encounters, encounter]
     });
     map.panTo(location);
+    return <Route render={<Redirect to={"/create-account"} />} />;
   };
 
   handleLogout = () => {
@@ -168,6 +173,36 @@ class App extends Component {
     const cookies = new Cookies();
     cookies.set("userToken", data.jwt);
     return <Redirect to="/profile" />;
+  };
+
+  uploadFile = (file, data) => {
+    // debugger;
+    const cookies = new Cookies();
+    const upload = new DirectUpload(
+      file,
+      "http://localhost:3000/rails/active_storage/direct_uploads"
+    );
+    //debugger;
+    upload.create((error, blob) => {
+      //console.log(data.user);
+      if (error) {
+        console.log(error);
+      } else {
+        fetch(`http://localhost:3000/posts/${data.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: "Bearer " + cookies.get("userToken")
+          },
+          body: JSON.stringify({ image: blob.signed_id })
+        })
+          .then(resp => resp.json())
+          .then(json => {
+            console.log(json);
+          });
+      }
+    });
   };
 
   render() {

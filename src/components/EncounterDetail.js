@@ -13,6 +13,9 @@ const EncounterDetail = props => (
       <Grid.Column width={8}>
         <p>{props.encounter.content}</p>
       </Grid.Column>
+      <Grid.Column>
+        <img src={`http://localhost:3000/${props.image}`} />
+      </Grid.Column>
     </Grid.Row>
   </Grid>
 );
