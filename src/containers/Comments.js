@@ -2,8 +2,32 @@ import React, { Component } from "react";
 import CreateComment from "../components/CreateComment";
 import ShowComments from "../components/ShowComment";
 import Cookies from "universal-cookie";
+import { Feed } from "semantic-ui-react";
 
 class Comments extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      encounter: props.encounter,
+      comments: []
+    };
+  }
+
+  componentDidMount() {
+    fetch(`http://localhost:3000/comments/${this.props.encounter.id}`)
+      .then(resp => resp.json())
+      .then(json => {
+        for (let index = 0; index < json.comments.length; index++) {
+          this.setState({
+            comments: [
+              ...this.state.comments,
+              { ...json.comments[index], ...json.user[index] }
+            ]
+          });
+        }
+      });
+  }
+
   handlePost = content => {
     const cookies = new Cookies();
     const submitData = {
@@ -21,17 +45,27 @@ class Comments extends Component {
       body: JSON.stringify(submitData)
     })
       .then(resp => resp.json())
-      .then(json => console.log(json));
+      .then(json => {
+        this.setState({
+          comments: [
+            ...this.state.comments,
+            { ...json.comment, ...json.user_info }
+          ]
+        });
+        console.log(json);
+      });
+
+    console.log(this.state);
   };
 
   render() {
     return (
-      <div>
-        {this.props.comments.map(comment => (
+      <Feed>
+        {this.state.comments.map(comment => (
           <ShowComments key={comment.id} comment={comment} />
         ))}
         <CreateComment handlePost={this.handlePost} />
-      </div>
+      </Feed>
     );
   }
 }

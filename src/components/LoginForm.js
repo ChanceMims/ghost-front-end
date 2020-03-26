@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+//import "../App.css";
 import {
   Button,
   Form,
   Grid,
   Header,
   Image,
+  Icon,
   Segment,
   Message
 } from "semantic-ui-react";
@@ -17,8 +19,12 @@ const LoginForm = props => {
   return (
     <Grid textAlign="center" style={{ height: "50vh" }} verticalAlign="middle">
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as="h2" color="teal" textAlign="center">
-          <Image src="/logo.png" /> Log-in to your account
+        <Header as="h2" color="electric purple" textAlign="center">
+          <Image
+            src="/icons/ghost1.png"
+            tag="Ghost by Becca O'Shea from the Noun Project"
+          />{" "}
+          Log-in to your account
         </Header>
         <Form
           onSubmit={() => props.handleSubmit({ username, password }, "login")}
@@ -26,6 +32,7 @@ const LoginForm = props => {
         >
           <Segment stacked>
             <Form.Input
+              style={{ color: "#44FF00" }}
               fluid
               icon="user"
               iconPosition="left"
@@ -33,6 +40,7 @@ const LoginForm = props => {
               onChange={e => setUsername(e.target.value)}
             />
             <Form.Input
+              style={{ color: "#44FF00" }}
               fluid
               icon="lock"
               iconPosition="left"
@@ -41,13 +49,15 @@ const LoginForm = props => {
               onChange={e => setPassword(e.target.value)}
             />
 
-            <Button color="teal" fluid size="large">
+            <Button color="electric purple" fluid size="large">
               Login
             </Button>
           </Segment>
         </Form>
         <Message>
-          <Link to="/create-user">New to us?</Link>
+          <Link style={{ color: "#BF02FF" }} to="/create-user">
+            New ghoul? Create account!
+          </Link>
         </Message>
       </Grid.Column>
     </Grid>

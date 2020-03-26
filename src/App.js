@@ -43,11 +43,8 @@ class App extends Component {
         .then(json => {
           console.log(json);
           this.setState({
-            currentUser: {
-              ...this.state.currentUser,
-              id: json.user.id,
-              username: json.user.username
-            }
+            currentUser: json.user,
+            currentAvatar: json.avatar_url
           });
           //console.log(this.state.currentUser);
         });
@@ -122,11 +119,7 @@ class App extends Component {
       .then(resp => resp.json())
       .then(json => {
         this.setState({
-          currentUser: {
-            ...this.state.currentUser,
-            id: json.user.id,
-            username: json.user.username
-          },
+          currentUser: json.user,
           currentAvatar: json.avatar
         });
         cookies.set("userToken", json.jwt);
@@ -211,13 +204,13 @@ class App extends Component {
         <Grid>
           <Router>
             <Grid.Row style={{ height: "50vh" }}>
-              <Grid.Column width={3}>
+              <Grid.Column width={2}>
                 <NavBar
                   handleClick={this.handleLogout}
                   loggedIn={!!this.state.currentUser}
                 />
               </Grid.Column>
-              <Grid.Column>
+              <Grid.Column width={14}>
                 <MyMap
                   handleClick={this.handleMapClick}
                   handleSelectEncounter={this.handleSelectEncounter}
@@ -227,9 +220,21 @@ class App extends Component {
               </Grid.Column>
             </Grid.Row>
 
-            <Grid.Row>
-              <Grid.Column>
-                <Route exact path="/" component={Home} />
+            <Grid.Row style={{ height: "50vh" }}>
+              <Grid.Column width={3} />
+              <Grid.Column width={12}>
+                <Route
+                  exact
+                  path="/"
+                  render={props => (
+                    <Home
+                      {...props}
+                      encounters={this.state.encounters.slice(
+                        this.state.encounters.length - 9
+                      )}
+                    />
+                  )}
+                />
                 <Route
                   exact
                   path="/profile"

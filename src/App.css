@@ -1,5 +1,11 @@
 .App {
   text-align: center;
+  color: #ffffff;
+  background-color: #393a42;
+}
+
+.spooky {
+  color: #44ff00;
 }
 
 .App-logo {

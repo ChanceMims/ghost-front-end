@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Form, Button } from "semantic-ui-react";
+import { Grid, Form, Button, Header, Image } from "semantic-ui-react";
 import { DirectUpload } from "activestorage";
 
 class CreateUser extends Component {
@@ -75,6 +75,13 @@ class CreateUser extends Component {
         verticalAlign="middle"
       >
         <Grid.Column style={{ maxWidth: 450 }}>
+          <Header as="h2" color="electric purple" textAlign="center">
+            <Image
+              src="/icons/ghost1.png"
+              tag="Ghost by Becca O'Shea from the Noun Project"
+            />{" "}
+            Create account
+          </Header>
           <Form onSubmit={() => this.handleSubmit()}>
             <label>Username: </label>
             <Form.Input
@@ -85,7 +92,7 @@ class CreateUser extends Component {
               onChange={this.handleChange}
             />
 
-            <label>PAssword:</label>
+            <label>Password:</label>
             <Form.Input
               type="password"
               name="password"
@@ -99,7 +106,7 @@ class CreateUser extends Component {
               name="avatar"
               onChange={this.handleChange}
             />
-            <Button>Create Account</Button>
+            <Button color="electric purple">Start Haunting!</Button>
           </Form>
         </Grid.Column>
       </Grid>

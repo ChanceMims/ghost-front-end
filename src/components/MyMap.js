@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { Map, GoogleApiWrapper, Marker, InfoWindow } from "google-maps-react";
+const styles = require("../GoogleMapStyles.json");
 
 const mapStyles = {
-  width: "80vw",
-  height: "100%"
+  width: "85%",
+  height: "100%",
+  styles
 };
 
 export class MyMap extends Component {
@@ -24,11 +26,16 @@ export class MyMap extends Component {
         onClick={this.props.handleClick}
         style={mapStyles}
         initialCenter={this.props.coords}
+        //defaultOptions={{ styles: styles }}
       >
         {this.props.encounters.map(encounter => (
           <Marker
             onClick={() => this.props.handleSelectEncounter(encounter)}
             key={encounter.id}
+            icon={{
+              url: "icons/ghostMarker.png",
+              scaledSize: { width: 30, height: 30 }
+            }}
             name={encounter.title}
             onMouseover={() => {}}
             position={{ lat: encounter.lat, lng: encounter.lng }}

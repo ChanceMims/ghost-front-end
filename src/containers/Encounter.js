@@ -4,18 +4,17 @@ import Comments from "./Comments";
 import { Grid } from "semantic-ui-react";
 
 const Encounter = props => {
-  const [comments, setComments] = useState([]);
+  //const [comments, setComments] = useState([]);
   const [image, setImage] = useState("");
 
   useEffect(() => {
-    // console.log(props.encounter);
     fetch(`http://localhost:3000/posts/${props.encounter.id}`)
       .then(resp => resp.json())
       .then(json => {
         setImage(json.image);
-        setComments(json.comments);
-        //console.log(json.comments);
       });
+
+    console.log("update");
   }, [props.encounter]);
 
   return (
@@ -28,7 +27,7 @@ const Encounter = props => {
       <Grid.Row>
         <Grid.Column>
           <Comments
-            comments={comments}
+            //comments={comments}
             currentUser={props.currentUser}
             encounter={props.encounter}
           />

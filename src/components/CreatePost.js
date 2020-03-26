@@ -13,8 +13,12 @@ const CreatePost = props => {
   return (
     <Grid textAlign="center" style={{ height: "50vh" }} verticalAlign="middle">
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as="h2" color="teal" textAlign="center">
-          <Image src="/logo.png" /> Share an encounter
+        <Header as="h2" color="electric purple" textAlign="center">
+          <Image
+            src="/icons/ghost1.png"
+            tag="Ghost by Becca O'Shea from the Noun Project"
+          />{" "}
+          Share an encounter
         </Header>
         <Form
           size="large"
@@ -22,12 +26,12 @@ const CreatePost = props => {
         >
           <Segment stacked>
             <Form.Input
-              placeholder="title"
+              placeholder="Title"
               onChange={e => setTitle(e.target.value)}
             />
             <Form.TextArea
               onChange={e => setContent(e.target.value)}
-              placeholder="description"
+              placeholder="Description"
             />
             <label>Upload your avatar:</label>
             <Form.Input
@@ -36,7 +40,7 @@ const CreatePost = props => {
               onChange={e => setImage(e.target.files[0])}
             />
             <Button
-              color="teal"
+              color="electric purple"
               size="large"
               //onClick={() => navigator.geolocation.getCurrentPosition(success)}
             >

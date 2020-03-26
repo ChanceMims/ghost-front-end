@@ -1,10 +1,22 @@
-import React from 'react'
+import React from "react";
+import { Grid } from "semantic-ui-react";
+import ShowEncounter from "./ShowEncounter";
 
-const Home = () => (
-    <h1>Welcome to the (insert name) app! Our goal is
-         to make it easy for you, the user, to find paranormal
-          experiences and share your own.
+const Home = props => (
+  <div>
+    <h1>
+      Welcome to the Paranormal Encounter sharing app! If you love sharing your
+      encounters and trying to recreate experiences of others, this is the app
+      for you! Here are some recent encounters to start:
     </h1>
-)
+    <Grid>
+      <Grid.Column columns={3}>
+        {props.encounters.map(encounter => (
+          <ShowEncounter encounter={encounter} />
+        ))}
+      </Grid.Column>
+    </Grid>
+  </div>
+);
 
-export default Home
+export default Home;
