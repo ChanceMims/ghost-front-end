@@ -7,14 +7,16 @@ const Home = props => (
     <h1>
       Welcome to the Paranormal Encounter sharing app! If you love sharing your
       encounters and trying to recreate experiences of others, this is the app
-      for you! Here are some recent encounters to start:
+      for you! Click on a recent encounter to start:
     </h1>
     <Grid>
-      <Grid.Column columns={3}>
+      <Grid.Row columns={3}>
         {props.encounters.map(encounter => (
-          <ShowEncounter encounter={encounter} />
+          <Grid.Column>
+            <ShowEncounter key={encounter.id} encounter={encounter} />
+          </Grid.Column>
         ))}
-      </Grid.Column>
+      </Grid.Row>
     </Grid>
   </div>
 );

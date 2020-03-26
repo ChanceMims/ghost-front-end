@@ -17,15 +17,15 @@ require("dotenv").config();
 const BASEURL = "http://localhost:3000";
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       encounters: [],
       currentUser: "",
       currentAvatar: "",
       coords: {
-        lat: 30.277397500000003,
-        lng: -97.7429255
+        lat: 0,
+        lng: 0
       },
       selectedEncounter: ""
     };
@@ -74,35 +74,38 @@ class App extends Component {
   }
 
   handlePost = data => {
-    const cookies = new Cookies();
-    navigator.geolocation.getCurrentPosition(position => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
+    if (this.state.currentUser) {
+      const cookies = new Cookies();
+      navigator.geolocation.getCurrentPosition(position => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
 
-      const encounterData = Object.assign({}, data, {
-        lat: lat,
-        lng: lng,
-        user_id: this.state.currentUser.id
-      });
-      // debugger;
-      fetch(`${BASEURL}/posts`, {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + cookies.get("userToken"),
-          Accepted: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(encounterData)
-      })
-        .then(resp => resp.json())
-        .then(json => {
-          this.setState({
-            encounters: [...this.state.encounters, json]
-          });
-          console.log(json);
-          this.uploadFile(data.image, json);
+        const encounterData = Object.assign({}, data, {
+          lat: lat,
+          lng: lng,
+          user_id: this.state.currentUser.id
         });
-    });
+        fetch(`${BASEURL}/posts`, {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + cookies.get("userToken"),
+            Accepted: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(encounterData)
+        })
+          .then(resp => resp.json())
+          .then(json => {
+            this.setState({
+              encounters: [...this.state.encounters, json]
+            });
+            console.log(json);
+            this.uploadFile(data.image, json);
+          });
+      });
+    } else {
+      alert("Please log in to share!");
+    }
   };
 
   handleLogin = (data, route) => {
@@ -118,36 +121,45 @@ class App extends Component {
     })
       .then(resp => resp.json())
       .then(json => {
-        this.setState({
-          currentUser: json.user,
-          currentAvatar: json.avatar
-        });
-        cookies.set("userToken", json.jwt);
-        console.log(this.state.currentUser);
+        if (json.error) {
+          alert(json.error);
+        } else {
+          this.setState({
+            currentUser: json.user,
+            currentAvatar: json.avatar
+          });
+          cookies.set("userToken", json.jwt);
+          console.log(this.state.currentUser);
+        }
       });
   };
 
-  handleSelectEncounter = encounter => {
-    this.setState({
-      selectedEncounter: encounter
-    });
-    console.log(this.state.selectedEncounter);
+  handleSelectEncounter = (encounter, routeHistory) => {
+    this.setState(
+      {
+        selectedEncounter: encounter
+      }
+      //console.log(this.props)
+    );
+    routeHistory.push("/encounter");
+    console.log(routeHistory);
+    // this.renderRedirect()
   };
 
-  handleMapClick = (ref, map, ev) => {
+  handleMapClick = (routeHistory, map, ev) => {
     const location = ev.latLng;
-    console.log(location.lat());
-    const encounter = {
-      id: "new",
-      name: "sample",
-      lat: location.lat(),
-      lng: location.lng()
-    };
-    this.setState({
-      encounters: [...this.state.encounters, encounter]
-    });
+    // console.log(location.lat());
+    // const encounter = {
+    //   id: "new",
+    //   name: "sample",
+    //   lat: location.lat(),
+    //   lng: location.lng()
+    // };
+    // this.setState({
+    //   encounters: [...this.state.encounters, encounter]
+    // });
     map.panTo(location);
-    return <Route render={<Redirect to={"/create-account"} />} />;
+    //this.props.history.push("create-post");
   };
 
   handleLogout = () => {
@@ -200,10 +212,18 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <Grid>
+      <div
+        className="App"
+        // style={{ backgroundImage: "url(/images/hauntedHouse.png)" }}
+      >
+        {/* <div className="image"></div> */}
+        <Grid className="edwin">
           <Router>
-            <Grid.Row style={{ height: "50vh" }}>
+            <Grid.Row
+              style={{
+                height: "50vh"
+              }}
+            >
               <Grid.Column width={2}>
                 <NavBar
                   handleClick={this.handleLogout}
@@ -211,12 +231,22 @@ class App extends Component {
                 />
               </Grid.Column>
               <Grid.Column width={14}>
-                <MyMap
-                  handleClick={this.handleMapClick}
-                  handleSelectEncounter={this.handleSelectEncounter}
-                  encounters={this.state.encounters}
-                  coords={this.state.coords}
-                />
+                <Route
+                  path="/"
+                  render={props => {
+                    if (this.state.coords.lat != 0) {
+                      return (
+                        <MyMap
+                          {...props}
+                          handleClick={this.handleMapClick}
+                          handleSelectEncounter={this.handleSelectEncounter}
+                          encounters={this.state.encounters}
+                          coords={this.state.coords}
+                        />
+                      );
+                    }
+                  }}
+                ></Route>
               </Grid.Column>
             </Grid.Row>
 
@@ -259,13 +289,22 @@ class App extends Component {
                 <Route
                   exact
                   path="/encounter"
-                  render={props => (
-                    <Encounter
-                      {...props}
-                      currentUser={this.state.currentUser}
-                      encounter={this.state.selectedEncounter}
-                    />
-                  )}
+                  render={props => {
+                    return !!this.state.selectedEncounter ? (
+                      <Encounter
+                        {...props}
+                        currentUser={this.state.currentUser}
+                        encounter={this.state.selectedEncounter}
+                      />
+                    ) : (
+                      <Home
+                        {...props}
+                        encounters={this.state.encounters.slice(
+                          this.state.encounters.length - 9
+                        )}
+                      />
+                    );
+                  }}
                 />
                 <Route
                   exact

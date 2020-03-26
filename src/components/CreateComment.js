@@ -10,7 +10,7 @@ const CreateComment = props => {
         onChange={e => setComment(e.target.value)}
         placeholder={"add a comment"}
       />
-      <Button>Submit!</Button>
+      <Button color={"electric purple"}>Submit!</Button>
     </Form>
   );
 };
