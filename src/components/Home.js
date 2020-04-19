@@ -4,7 +4,7 @@ import ShowEncounter from "./ShowEncounter";
 
 const Home = props => (
   <div>
-    <h1>
+    <h1 style={{ color: "white" }}>
       Welcome to the Paranormal Encounter sharing app! If you love sharing your
       encounters and trying to recreate experiences of others, this is the app
       for you! Click on a recent encounter to start:

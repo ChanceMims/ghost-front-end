@@ -8,7 +8,7 @@ const EncounterDetail = props => (
     <Item.Image size="tiny" src={`http://localhost:3000/${props.image}`} />
 
     <Item.Content>
-      <Item.Header as="a">{props.encounter.title}</Item.Header>
+      <Item.Header>Title: {props.encounter.title}</Item.Header>
 
       <Item.Description>{props.encounter.content}</Item.Description>
       {/* <Item.Extra>Tags:</Item.Extra> */}
